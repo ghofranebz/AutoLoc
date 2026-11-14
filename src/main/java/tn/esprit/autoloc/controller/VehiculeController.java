@@ -97,23 +97,23 @@ public class VehiculeController {
 
     @Operation(summary = "Affecter un véhicule à une agence")
     @PatchMapping("/{idVehicule}/agence/{idAgence}")
-    public VehiculeResponse affecterAgence(@PathVariable("idVehicule") Long idVehicule,
-                                           @PathVariable("idAgence") Long idAgence) {
-        return gestionService.affecterAgence(idVehicule, idAgence);
+    public VehiculeResponse affecterVehicule(@PathVariable("idVehicule") Long idVehicule,
+                                             @PathVariable("idAgence") Long idAgence) {
+        return gestionService.affecterVehicule(idVehicule, idAgence);
     }
 
-    @Operation(summary = "Ajouter un équipement à un véhicule")
+    @Operation(summary = "Affecter (installer) un équipement sur un véhicule", description = "409 s'il est déjà installé.")
     @PostMapping("/{idVehicule}/equipements/{idEquipement}")
-    public VehiculeResponse ajouterEquipement(@PathVariable("idVehicule") Long idVehicule,
-                                              @PathVariable("idEquipement") Long idEquipement) {
-        return gestionService.ajouterEquipement(idVehicule, idEquipement);
+    public VehiculeResponse affecterEquipement(@PathVariable("idVehicule") Long idVehicule,
+                                               @PathVariable("idEquipement") Long idEquipement) {
+        return gestionService.affecterEquipement(idVehicule, idEquipement);
     }
 
-    @Operation(summary = "Retirer un équipement d'un véhicule")
+    @Operation(summary = "Désaffecter (retirer) un équipement d'un véhicule", description = "400 si le véhicule ne l'a pas.")
     @DeleteMapping("/{idVehicule}/equipements/{idEquipement}")
-    public VehiculeResponse retirerEquipement(@PathVariable("idVehicule") Long idVehicule,
-                                              @PathVariable("idEquipement") Long idEquipement) {
-        return gestionService.retirerEquipement(idVehicule, idEquipement);
+    public VehiculeResponse desaffecterEquipement(@PathVariable("idVehicule") Long idVehicule,
+                                                  @PathVariable("idEquipement") Long idEquipement) {
+        return gestionService.desaffecterEquipement(idVehicule, idEquipement);
     }
 
     @Operation(summary = "Changer le statut d'un véhicule (DISPONIBLE, LOUE, MAINTENANCE)")

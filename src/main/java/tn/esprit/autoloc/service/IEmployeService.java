@@ -11,7 +11,11 @@ public interface IEmployeService extends Consultable<EmployeResponse, Long>,
 
     EmployeResponse add(EmployeRequest request);
 
-    EmployeResponse affecterAgence(Long idEmploye, Long idAgence);
+    /** Affectation @ManyToOne : rattache un employé SANS agence à une agence. */
+    EmployeResponse affecterEmploye(Long idEmploye, Long idAgence);
+
+    /** Désaffectation @ManyToOne : retire l'employé de son agence (l'employé n'est pas supprimé). */
+    EmployeResponse desaffecterEmploye(Long idEmploye);
 
     List<EmployeResponse> findByRole(RoleEmploye role);
 

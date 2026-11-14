@@ -53,11 +53,19 @@ public class EmployeController {
         employeService.delete(id);
     }
 
-    @Operation(summary = "Affecter un employé à une agence")
+    @Operation(summary = "Affecter un employé à une agence",
+            description = "400 si l'employé est déjà affecté à une agence : une mutation passe d'abord par la désaffectation.")
     @PatchMapping("/{idEmploye}/agence/{idAgence}")
-    public EmployeResponse affecterAgence(@PathVariable("idEmploye") Long idEmploye,
-                                          @PathVariable("idAgence") Long idAgence) {
-        return employeService.affecterAgence(idEmploye, idAgence);
+    public EmployeResponse affecterEmploye(@PathVariable("idEmploye") Long idEmploye,
+                                           @PathVariable("idAgence") Long idAgence) {
+        return employeService.affecterEmploye(idEmploye, idAgence);
+    }
+
+    @Operation(summary = "Désaffecter un employé de son agence",
+            description = "Supprime le lien employé -> agence (l'employé et l'agence sont conservés). 400 s'il n'a pas d'agence.")
+    @PatchMapping("/{idEmploye}/desaffecter")
+    public EmployeResponse desaffecterEmploye(@PathVariable("idEmploye") Long idEmploye) {
+        return employeService.desaffecterEmploye(idEmploye);
     }
 
     @Operation(summary = "Lister les employés par rôle (AGENT ou MANAGER)")
