@@ -3,7 +3,7 @@ package tn.esprit.autoloc.service.tarification;
 import org.springframework.stereotype.Component;
 
 /** Tarif week-end : réduction de 10 %. */
-@Component("WEEKEND")
+@Component("weekend")
 public class TarificationWeekend implements StrategieTarification {
 
     private static final double REDUCTION = 0.10;

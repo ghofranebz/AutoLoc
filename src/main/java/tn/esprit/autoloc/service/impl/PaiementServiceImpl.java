@@ -14,7 +14,7 @@ import tn.esprit.autoloc.repository.ContratRepository;
 import tn.esprit.autoloc.repository.PaiementRepository;
 import tn.esprit.autoloc.service.IPaiementService;
 import tn.esprit.autoloc.service.support.EntityLoader;
-
+import tn.esprit.autoloc.service.support.Fuseau;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -54,7 +54,7 @@ public class PaiementServiceImpl implements IPaiementService {
         }
         Paiement paiement = mapper.toEntity(request);
         if (paiement.getDatePaiement() == null) {
-            paiement.setDatePaiement(LocalDate.now());
+            paiement.setDatePaiement(LocalDate.now(Fuseau.TUNIS));
         }
         paiement.setContrat(contrat);
         return mapper.toResponse(paiementRepository.save(paiement));

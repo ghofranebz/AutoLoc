@@ -36,7 +36,7 @@ class LiskovEtSegregationTest {
     private List<Consultable<?, Long>> tousLesServices() {
         ReservationRepository reservationRepository = mock(ReservationRepository.class);
         TarificationService tarification = new TarificationService(
-                Map.of("STANDARD", new TarificationStandard()), mock(VehiculeRepository.class), loader);
+                Map.of("standard", new TarificationStandard()), mock(VehiculeRepository.class), loader);
         return List.of(
                 new AgenceServiceImpl(mock(AgenceRepository.class), mock(VehiculeRepository.class),
                         mock(EmployeRepository.class), mock(AgenceMapper.class), loader),

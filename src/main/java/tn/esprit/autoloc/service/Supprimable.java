@@ -1,7 +1,7 @@
 package tn.esprit.autoloc.service;
 
 /** ISP : contrat minimal de suppression, à implémenter uniquement par les services qui supportent delete. */
-public interface Supprimable<ID> {
+public interface Supprimable<I> {
 
-    void delete(ID id);
+    void delete(I id);
 }

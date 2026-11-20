@@ -20,7 +20,7 @@ import java.util.TreeSet;
 /**
  * Atelier GoF/SOLID, partie C, étape 3 : utilise les stratégies de tarification.
  * Spring injecte une Map contenant TOUS les beans StrategieTarification, indexés par leur nom
- * (STANDARD, WEEKEND, LONGUE_DUREE, ENTREPRISE). Plus aucun if/else sur le type (Strategy + OCP).
+ * (standard, weekend, longueDuree, entreprise). Plus aucun if/else sur le type (Strategy + OCP).
  */
 @Service
 @RequiredArgsConstructor
@@ -47,23 +47,27 @@ public class TarificationService implements ITarificationService {
     public TarifResponse calculerPourVehicule(Long idVehicule, String typeTarif, int jours) {
         Vehicule vehicule = loader.charger(vehiculeRepository, idVehicule, "Vehicule");
         double prix = calculer(typeTarif, vehicule.getTarifJournalier().doubleValue(), jours);
-        return new TarifResponse(idVehicule, normaliser(typeTarif), jours, vehicule.getTarifJournalier(),
-                BigDecimal.valueOf(prix).setScale(2, RoundingMode.HALF_UP));
+        return new TarifResponse(idVehicule, versType(versNomBean(typeTarif)), jours,
+                vehicule.getTarifJournalier(), BigDecimal.valueOf(prix).setScale(2, RoundingMode.HALF_UP));
     }
 
     @Override
     public Set<String> typesDisponibles() {
-        return new TreeSet<>(strategies.keySet());
+        Set<String> types = new TreeSet<>();
+        for (String nomBean : strategies.keySet()) {
+            types.add(versType(nomBean));
+        }
+        return types;
     }
 
     @Override
     public boolean existe(String typeTarif) {
-        return strategies.containsKey(normaliser(typeTarif));
+        return strategies.containsKey(versNomBean(typeTarif));
     }
 
     /** Question 4 : type inconnu -> erreur 400 claire avec la liste des types (pas de formule par défaut). */
     private StrategieTarification strategie(String typeTarif) {
-        StrategieTarification strategie = strategies.get(normaliser(typeTarif));
+        StrategieTarification strategie = strategies.get(versNomBean(typeTarif));
         if (strategie == null) {
             throw new BusinessRuleException("Type de tarif inconnu : '" + typeTarif
                     + "'. Types disponibles : " + typesDisponibles());
@@ -71,8 +75,21 @@ public class TarificationService implements ITarificationService {
         return strategie;
     }
 
-    /** "longue-duree", "Longue_Duree" et "LONGUE_DUREE" désignent la même stratégie. */
-    private String normaliser(String typeTarif) {
-        return typeTarif == null ? "" : typeTarif.trim().toUpperCase().replace('-', '_');
+    /** "LONGUE_DUREE", "longue-duree" ou "Longue_Duree" deviennent "longueDuree" (nom du bean). */
+    private String versNomBean(String typeTarif) {
+        if (typeTarif == null || typeTarif.isBlank()) {
+            return "";
+        }
+        String[] mots = typeTarif.trim().toLowerCase().split("[-_\\s]+");
+        StringBuilder nom = new StringBuilder(mots[0]);
+        for (int i = 1; i < mots.length; i++) {
+            nom.append(Character.toUpperCase(mots[i].charAt(0))).append(mots[i].substring(1));
+        }
+        return nom.toString();
+    }
+
+    /** "longueDuree" devient "LONGUE_DUREE" (affichage dans Swagger). */
+    private String versType(String nomBean) {
+        return nomBean.replaceAll("([a-z0-9])([A-Z])", "$1_$2").toUpperCase();
     }
 }

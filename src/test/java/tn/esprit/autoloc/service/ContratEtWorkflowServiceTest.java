@@ -41,7 +41,7 @@ class ContratEtWorkflowServiceTest {
     @Mock ReservationRepository reservationRepository;
 
     private final TarificationService tarification = new TarificationService(
-            Map.of("STANDARD", new TarificationStandard(), "LONGUE_DUREE", new TarificationLongueDuree()),
+            Map.of("standard", new TarificationStandard(), "longueDuree", new TarificationLongueDuree()),
             mock(VehiculeRepository.class), new EntityLoader());
 
     private ContratServiceImpl contratService(String typeTarification) {
@@ -103,7 +103,8 @@ class ContratEtWorkflowServiceTest {
         r.setStatut(StatutReservation.EN_ATTENTE);
         when(reservationRepository.findById(5L)).thenReturn(Optional.of(r));
 
-        assertThatThrownBy(() -> contratService("STANDARD").creer(5L))
+        ContratServiceImpl service = contratService("STANDARD");
+        assertThatThrownBy(() -> service.creer(5L))
                 .isInstanceOf(BusinessRuleException.class);
     }
 

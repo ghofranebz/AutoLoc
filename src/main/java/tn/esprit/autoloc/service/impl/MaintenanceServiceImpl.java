@@ -14,7 +14,7 @@ import tn.esprit.autoloc.repository.MaintenanceRepository;
 import tn.esprit.autoloc.repository.VehiculeRepository;
 import tn.esprit.autoloc.service.IMaintenanceService;
 import tn.esprit.autoloc.service.support.EntityLoader;
-
+import tn.esprit.autoloc.service.support.Fuseau;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -52,8 +52,7 @@ public class MaintenanceServiceImpl implements IMaintenanceService {
         }
         Maintenance maintenance = mapper.toEntity(request);
         if (maintenance.getDateDebut() == null) {
-            maintenance.setDateDebut(LocalDate.now());
-        }
+            maintenance.setDateDebut(LocalDate.now(Fuseau.TUNIS));        }
         maintenance.setVehicule(vehicule);
         vehicule.setStatut(StatutVehicule.MAINTENANCE);
         return mapper.toResponse(maintenanceRepository.save(maintenance));
@@ -66,8 +65,7 @@ public class MaintenanceServiceImpl implements IMaintenanceService {
         if (maintenance.getDateFin() != null) {
             throw new BusinessRuleException("La maintenance " + id + " est déjà terminée");
         }
-        LocalDate fin = dateFin != null ? dateFin : LocalDate.now();
-        if (fin.isBefore(maintenance.getDateDebut())) {
+        LocalDate fin = dateFin != null ? dateFin : LocalDate.now(Fuseau.TUNIS);        if (fin.isBefore(maintenance.getDateDebut())) {
             throw new BusinessRuleException("La date de fin ne peut pas précéder la date de début");
         }
         maintenance.setDateFin(fin);

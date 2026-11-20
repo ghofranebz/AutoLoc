@@ -34,6 +34,7 @@ import java.util.List;
 public class VehiculeServiceImpl implements IVehiculeService {
 
     private final VehiculeRepository vehiculeRepository;
+    private static final String VEHICULE = "véhicule";
     private final AgenceRepository agenceRepository;
     private final VehiculeMapper mapper;
     private final EntityLoader loader;
@@ -72,7 +73,7 @@ public class VehiculeServiceImpl implements IVehiculeService {
             vehicule.setAgence(loader.charger(agenceRepository, request.idAgence(), "Agence"));
         }
         Vehicule enregistre = vehiculeRepository.save(vehicule);      // persistance  -> VehiculeRepository
-        journalisation.operation("Ajout", "véhicule", enregistre.getIdVehicule()); // journalisation
+        journalisation.operation("Ajout", VEHICULE, enregistre.getIdVehicule()); // journalisation
         return mapper.toResponse(enregistre);
     }
 
@@ -82,7 +83,7 @@ public class VehiculeServiceImpl implements IVehiculeService {
         vehiculeValidator.validerModification(existant, request);
         mapper.apply(request, existant);
         Vehicule enregistre = vehiculeRepository.save(existant);
-        journalisation.operation("Modification", "véhicule", id);
+        journalisation.operation("Modification", VEHICULE, id);
         return mapper.toResponse(enregistre);
     }
 
@@ -92,7 +93,7 @@ public class VehiculeServiceImpl implements IVehiculeService {
         vehiculeValidator.validerSuppression(id);
         vehicule.getEquipements().clear();
         vehiculeRepository.delete(vehicule);
-        journalisation.operation("Suppression", "véhicule", id);
+        journalisation.operation("Suppression", VEHICULE, id);
     }
 
     @Override

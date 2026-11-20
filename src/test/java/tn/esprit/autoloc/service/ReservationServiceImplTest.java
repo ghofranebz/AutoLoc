@@ -90,7 +90,8 @@ class ReservationServiceImplTest {
         when(vehiculeRepository.findById(2L)).thenReturn(Optional.of(vehicule(StatutVehicule.DISPONIBLE)));
         when(reservationRepository.existsChevauchement(2L, debut, fin)).thenReturn(true);
 
-        assertThatThrownBy(() -> service.creer(new ReservationRequest(1L, 2L, debut, fin)))
+        ReservationRequest request = new ReservationRequest(1L, 2L, debut, fin);
+        assertThatThrownBy(() -> service.creer(request))
                 .isInstanceOf(ConflictException.class);
     }
 
@@ -99,7 +100,8 @@ class ReservationServiceImplTest {
         when(clientRepository.findById(1L)).thenReturn(Optional.of(client()));
         when(vehiculeRepository.findById(2L)).thenReturn(Optional.of(vehicule(StatutVehicule.MAINTENANCE)));
 
-        assertThatThrownBy(() -> service.creer(new ReservationRequest(1L, 2L, debut, fin)))
+        ReservationRequest request = new ReservationRequest(1L, 2L, debut, fin);
+        assertThatThrownBy(() -> service.creer(request))
                 .isInstanceOf(BusinessRuleException.class)
                 .hasMessageContaining("maintenance");
     }
@@ -109,7 +111,8 @@ class ReservationServiceImplTest {
         when(clientRepository.findById(1L)).thenReturn(Optional.of(client()));
         when(vehiculeRepository.findById(2L)).thenReturn(Optional.of(vehicule(StatutVehicule.DISPONIBLE)));
 
-        assertThatThrownBy(() -> service.creer(new ReservationRequest(1L, 2L, fin, debut)))
+        ReservationRequest request = new ReservationRequest(1L, 2L, fin, debut);
+        assertThatThrownBy(() -> service.creer(request))
                 .isInstanceOf(BusinessRuleException.class);
     }
 
@@ -117,7 +120,8 @@ class ReservationServiceImplTest {
     void creer_leve_404_si_le_client_est_inconnu() {
         when(clientRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.creer(new ReservationRequest(1L, 2L, debut, fin)))
+        ReservationRequest request = new ReservationRequest(1L, 2L, debut, fin);
+        assertThatThrownBy(() -> service.creer(request))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Client introuvable avec l'id 1");
     }

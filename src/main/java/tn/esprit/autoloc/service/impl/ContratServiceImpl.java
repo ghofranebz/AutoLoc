@@ -17,7 +17,7 @@ import tn.esprit.autoloc.repository.ReservationRepository;
 import tn.esprit.autoloc.service.IContratService;
 import tn.esprit.autoloc.service.ITarificationService;
 import tn.esprit.autoloc.service.support.EntityLoader;
-
+import tn.esprit.autoloc.service.support.Fuseau;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -96,8 +96,7 @@ public class ContratServiceImpl implements IContratService {
 
         Contrat contrat = new Contrat();
         contrat.setReservation(reservation);
-        contrat.setDateSignature(LocalDate.now());
-        contrat.setMontantTotal(montant);
+        contrat.setDateSignature(LocalDate.now(Fuseau.TUNIS));        contrat.setMontantTotal(montant);
         contrat.setValide(true);
 
         reservation.getVehicule().setStatut(StatutVehicule.LOUE);

@@ -14,6 +14,7 @@ import tn.esprit.autoloc.repository.ClientRepository;
 import tn.esprit.autoloc.repository.ReservationRepository;
 import tn.esprit.autoloc.service.IClientService;
 import tn.esprit.autoloc.service.support.EntityLoader;
+import tn.esprit.autoloc.service.support.Fuseau;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ClientServiceImpl implements IClientService {
         }
         Client client = mapper.toEntity(request);
         if (client.getDateInscription() == null) {
-            client.setDateInscription(LocalDate.now());
+            client.setDateInscription(LocalDate.now(Fuseau.TUNIS));
         }
         return mapper.toResponse(clientRepository.save(client));
     }

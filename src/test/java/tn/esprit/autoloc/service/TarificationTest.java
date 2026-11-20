@@ -28,10 +28,11 @@ class TarificationTest {
 
     @BeforeEach
     void setUp() {
+        // clés = noms des beans Spring (@Component("standard"), ...)
         strategies = new HashMap<>(Map.of(
-                "STANDARD", new TarificationStandard(),
-                "WEEKEND", new TarificationWeekend(),
-                "LONGUE_DUREE", new TarificationLongueDuree()));
+                "standard", new TarificationStandard(),
+                "weekend", new TarificationWeekend(),
+                "longueDuree", new TarificationLongueDuree()));
         service = new TarificationService(strategies, mock(VehiculeRepository.class), new EntityLoader());
     }
 
@@ -54,7 +55,7 @@ class TarificationTest {
     @Test
     void ocp_ajouter_la_strategie_entreprise_sans_modifier_le_service() {
         assertThat(service.existe("ENTREPRISE")).isFalse();
-        strategies.put("ENTREPRISE", new TarificationEntreprise());
+        strategies.put("entreprise", new TarificationEntreprise());
         assertThat(service.calculer("ENTREPRISE", 100, 10)).isEqualTo(850.0);
         assertThat(service.typesDisponibles()).containsExactly("ENTREPRISE", "LONGUE_DUREE", "STANDARD", "WEEKEND");
     }

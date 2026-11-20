@@ -3,7 +3,7 @@ package tn.esprit.autoloc.service.tarification;
 import org.springframework.stereotype.Component;
 
 /** Tarif longue durée : réduction de 20 %. */
-@Component("LONGUE_DUREE")
+@Component("longueDuree")
 public class TarificationLongueDuree implements StrategieTarification {
 
     private static final double REDUCTION = 0.20;
